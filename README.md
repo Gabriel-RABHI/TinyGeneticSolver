@@ -1,24 +1,24 @@
 # TinyGeneticSolver
 
-This library is a simplified implementation of machine learning Genetic Algorithm. This implementation mimics the biological selection process to find the most efficient parameter set of a system.
+This is a simplified implementation of a machine learning Genetic Algorithm. It mimics the biological selection process to find the most efficient parameter set of a system.
 
-Imagine you have a class that generate outputs from inputs. This class have a set of parameters that change computations. This parameters permit to tune the system to make it efficient. The efficiency of a parameters set can be measured using a test function that score the output. If there is ont single parameter with four possible values, you can test each value to find the parameter value that make the best output. If you have many parameters with lot of possible values, you may have an infinite values combinations and test all combinations may takes years of computations.
+Imagine you have a class that generate outputs from inputs. This class have a set of parameters that change computations. This parameters permit to tune the system to make it efficient. The efficiency of a parameter set can be measured using a test function that score the output. If there is one single parameter with few possible values, you can test each value to find the parameter value that produce the best output. If you have many parameters with lot of possible values, you may have an large values combinations (millions or billions) and test all combinations may takes years of computations.
 
-To find the best parameter set, you can use a Genetic Algorithm : it permit to randomly set parameters, measure the performance of each set, and sellect the parameters changes that permit to have a better output. A suite of random mixes permit to maintain a good creativity to find combinations.
+To find the best parameter set, you can use a Genetic Algorithm : it permit to randomly set parameters, measure the performance of each set, and select the parameters changes that permit to have a better output. A suite of random mixes permit to maintain a good "creativity" to find combinations.
 
 ## The process
 
 ![image](https://github.com/Gabriel-RABHI/TinyGeneticSolver/assets/8116286/54f23e9a-0b08-4c55-bd68-d13789c9cf18)
 
 The refinement process is based on a loop :
-- First, the algorithm create a population with various randomly defined parameters, named Specie Genetic.
-- We bench instances. Each instance of the Specie is tested : we compute a score (higher is better).
-- A selection of the best instances is done.
+- First, the algorithm create a population with various randomly defined parameters.
+- We bench each parameter set. Each instance of the Specie is tested : we compute a score (higher is better).
+- A selection of the best parameter set is done.
 - A combination of the parameters of the best instances is done in the less efficient instances.
-- Some random mutations are done in the Genome, to search new combinations.
+- Some random mutations are done in the parameter sets, to search new combinations.
 - Redo bench.
 
-So, the process is a combination of random parameter set and selection of the best parameters.
+So, the process is a combination of random parameter changes and diffusion of the best parameters.
 
 ## How to use it
 
@@ -44,7 +44,7 @@ var specy = new SpecieGenetic(new int[] { 2, 3 }, new string[][] { new string[] 
 
 Each Gene value will be replaced by the corresponding label.
 
-You can specify a label for a Gene, ending with "=" char output the value.
+You can specify a label for a Gene, ending with "=" char to output the value.
 
 ```c#
 var specy = new SpecieGenetic(new int[] { 2, 3 }, new string[][] { new string[] { "Right", "Left" }, new string[] { "Second=" }  });
@@ -52,22 +52,22 @@ var specy = new SpecieGenetic(new int[] { 2, 3 }, new string[][] { new string[] 
 
 ### Defining the SpeciesPopulation
 
-A population is like a Specie Instance Collection used to perform evolution and selection of the best parameters. The constructor need the SpecieGenetic, the population individual count, and a function to text each Genome.
+A population is like a Specie Instance Collection used to perform evolution and selection of the best parameter set. The constructor need the SpecieGenetic, the population individual count and a function to test each Genome (parameter set).
 
 ```c#
 public SpeciesPopulation(SpecieGenetic genetic, int count, Func<Genome, double> measure)
 ```
 
-The count minimal value is defined in constant MINIMAL_POPULATION. The measure function had a Genome as parameter and return a score. Higher is the score, better is the output. A SpeciesPopulation permit to Train the system to search the mot efficient Genome, or to Scan all combinations. The best Genome is in the BestGenome property.
+The count minimal value is defined in the constant MINIMAL_POPULATION. The measure function had a Genome as parameter and return a score. Higher is the score, better is the output. A SpeciesPopulation permit to Train the system to search the most efficient Genome, or to Scan all combinations. The best Genome is in the BestGenome property.
 
 ### Converting Genome to parameters, and parameters to Genome
 
-In any Machine Learning solution, what's drive the success of the result (the efficiency of learning algorithm) is the quality of the problem modeling. The modeling is the most important thing, and measure the efficiency of the learning is included in this process of modeling. Here, there is two main questions :
+In any Machine Learning solution, what's drive the success of the result (the efficiency of the learning process) is the quality of the problem modeling. The modeling is the most important thing, and measure the efficiency of each variation is included in this process of modeling. Here, there is two main questions :
 
 1. How to define a SpecieGenetic ? How many Genes with how many distinct values ?
 2. How to score a Genome ?
 
-A gene is a parameter. It is an Int variable that vary from 0 to N, where N is the number of distinct values the parameter can have. You'll think that in many cases, you'll have some parameters that have a limited range integers. That's true. But it will be necessary to map Gene 0..N range to a parameter value. If the parameter is an Enum, you simply have to set the Gene to the number of entries in the Enum : it is the simplest situation. If the parameter is a continuous double value, you'll need to find a mapping principle with a level of discretization.
+A gene is converted in a parameter value. It is an Int variable that vary from 0 to N, where N is the number of distinct values the parameter can have. You'll think that in many cases, you don't have parameters that have a limited range integers. That's true. But it will be necessary to map Gene 0..N range to a parameter value. If the parameter is an Enum, you simply have to set the Gene to the number of entries in the Enum : it is the simplest situation. If the parameter is a continuous double value, you'll need to find a mapping principle with a level of discretization.
 
 For example, here a mapping to a double value. Here the Gene is defined as [0..200] :
 
@@ -85,11 +85,19 @@ int paramValue = genome.Genes[0] - genome.Genes[0];
 
 This permit to convert a [0..100] Gene in a int that vary from 0 to 10 000 with an exponential scale.
 
+One solution is to create a Mapping Table, an array of value to find the value from the Gene value.
+
+```
+static float[] PARAM_MAP = new {0.25, 1, 1.5, 1.75};
+
+float paramValue = PARAM_MAP[genome.Genes[0]];
+```
+
 ## Full sample
 
-In this sample, the goal is to find a Genome representing a step by step path to move from point (0,0) to a point (10, 10). Each Gene value represent a move (Up, Down, Left, Right). The Genetic is composed of 24 Genes representing the moves. The result is computed by cumulate all the moves to goes to the destination point.
+In this sample, the goal is to find a Genome representing a step by step path to move from point (0,0) to a point (10, 10). Each Gene had four values that represent a move (Up, Down, Left, Right). The Genetic is composed of 24 Genes representing the sequential moves. The result is computed by cumulate all the moves to goes to the destination point.
 
-There is 281 474 976 710 656 combinations. The training is done by a 10 000 iteration call to Train method in few seconds. The score is the shortest number of steps to reach the destinnation.
+There is **281 474 976 710 656** combinations. The training is done by a 10 000 iteration call to Train method in few seconds. The score is the shortest number of steps to reach the destination point.
 
 ```c#
 var specy = new SpecieGenetic(
