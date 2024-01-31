@@ -6,8 +6,8 @@ namespace TinyGeneticSolver
     public class Genome
     {
         private Random _random = new Random(0);
-        public int[] _genes;
-        public SpecieGenetic _genetic;
+        private int[] _genes;
+        private SpecieGenetic _genetic;
 
         public Genome(SpecieGenetic genetic, bool random = true)
         {
@@ -57,7 +57,7 @@ namespace TinyGeneticSolver
 
         public override string ToString()
         {
-            string s = $"Score = {Score} < {Infos} >";
+            string s = $"Score = {Score} <{Infos}>";
             if (_genetic.Labels != null)
             {
                 s += " [ ";
@@ -67,13 +67,9 @@ namespace TinyGeneticSolver
                     int l = _genetic.Labels[Math.Min(n, _genetic.Labels.Length - 1)].Length;
                     string added = _genetic.Labels[Math.Min(n, _genetic.Labels.Length - 1)][Math.Min(g, l - 1)];
                     if (added.EndsWith("="))
-                    {
                         s += added + " " + g.ToString() + " - ";
-                    }
                     else
-                    {
                         s += added + " - ";
-                    }
                     n++;
                 }
                 s += " ] ";
