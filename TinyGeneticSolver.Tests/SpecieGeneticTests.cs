@@ -49,9 +49,8 @@ namespace TinyGeneticSolver.Tests
                 );
             // -------- Train the model
             for (int i = 0; i < 10_000; i++)
-            {
                 pop.Train();
-            }
+            Console.WriteLine(pop.BestGenome);
         }
 
         [Fact(DisplayName = "Find the shortest path using scanning")]

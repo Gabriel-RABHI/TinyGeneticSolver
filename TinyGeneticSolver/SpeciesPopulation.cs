@@ -6,6 +6,8 @@ namespace TinyGeneticSolver
 {
     public class SpeciesPopulation
     {
+        public const int MINIMAL_POPULATION = 300;
+
         public List<Genome> _population = new List<Genome>();
         public SpecieGenetic _genetic;
         public Func<Genome, double> _measure;
@@ -14,7 +16,7 @@ namespace TinyGeneticSolver
         public SpeciesPopulation(SpecieGenetic genetic, int count, Func<Genome, double> measure)
         {
             _genetic = genetic;
-            count = Math.Max(count, 500);
+            count = Math.Max(count, MINIMAL_POPULATION);
             for (int i = 0; i < count; i++)
                 _population.Add(new Genome(genetic));
             _measure = measure;
@@ -23,7 +25,7 @@ namespace TinyGeneticSolver
         public SpeciesPopulation(SpecieGenetic genetic, Func<Genome, double> measure)
         {
             _genetic = genetic;
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < MINIMAL_POPULATION; i++)
                 _population.Add(new Genome(genetic));
             _measure = measure;
         }
@@ -47,7 +49,7 @@ namespace TinyGeneticSolver
                 var gene = _rnd.Next(_genetic.Maximums.Length);
                 _population[dst].Genes[gene] = _population[src].Genes[gene];
             }
-            // -------- Mutations
+            // -------- Perform random mutations
             for (int i = 0; i < _population.Count / 100; i++)
             {
                 var g = _rnd.Next(0, _population.Count);
@@ -65,7 +67,7 @@ namespace TinyGeneticSolver
                         _population[g].Genes[gene] = _genetic.Maximums[gene];
                 }
             }
-            // -------- Sort, to get the best genome
+            // -------- Shuffle and sort to get the best genome diversity
             Shuffle(_population);
             _population.Sort((a, b) => b.Score.CompareTo(a.Score));
         }

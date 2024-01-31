@@ -57,7 +57,7 @@ namespace TinyGeneticSolver
 
         public override string ToString()
         {
-            string s = $"Score = {Score} <{Infos}>";
+            string s = $"Score = {Score} <{Infos}> ";
             if (_genetic.Labels != null)
             {
                 s += " [ ";
