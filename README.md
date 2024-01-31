@@ -8,15 +8,15 @@ To find the best parameter set, you can use a Genetic Algorythm : it permit to r
 
 ## The process
 
-The refinement process is based on a loop.
+![image](https://github.com/Gabriel-RABHI/TinyGeneticSolver/assets/8116286/54f23e9a-0b08-4c55-bd68-d13789c9cf18)
 
-![image](https://github.com/Gabriel-RABHI/TinyGeneticSolver/assets/8116286/f893117d-0109-4381-bca8-4cb15549b630)
-
+The refinement process is based on a loop :
 - First, the algorythm create a population with various randomly defined parameters, nammed Specie Genetic.
 - We bench instances. Each instance of the Specie is tested : we compute a score (higher is better).
 - A sellection of the best instances is done.
 - A combination of the parameters of the best instances is done in the less efficient instances.
 - Some random mutations are done in the Genome, to search new combinations.
+- Redo bench.
 
 So, the process is a combination of random parameter set and sellection of the best parameters.
 
