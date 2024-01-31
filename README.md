@@ -21,3 +21,11 @@ The refinement process is based on a loop :
 So, the process is a combination of random parameter set and sellection of the best parameters.
 
 ## How to use it
+
+There is 3 components :
+- SpecieGenetic : it describe the genes topology - how many genes (or parameters) have the specie ? And what is the number of different values each gene (parameter) can have ?
+- SpeciesPopulation : it a set of instances of the Specie, to refine.
+- Genome : it is the genetic set (or parameter set) for a given Specie instance.
+  
+## Defining the SpecieGenetic
+
