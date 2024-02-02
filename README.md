@@ -1,4 +1,4 @@
-# TinyGeneticSolver
+# Tiny Genetic Solver
 
 This is a simplified implementation of a machine learning Genetic Algorithm. It mimics the biological selection process to find the most efficient parameter set of a system.
 
